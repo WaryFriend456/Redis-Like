@@ -16,7 +16,9 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 # Create the main executable
-add_executable(redis_like ${SOURCES})
+add_executable(redis_like ${SOURCES}
+        include/command_parser.h
+        src/command_parser.cpp)
 
 # (Optional) If you plan to add tests later, enable testing
 enable_testing()
