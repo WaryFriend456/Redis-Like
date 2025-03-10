@@ -1,20 +1,16 @@
+#ifndef CATCH_CONFIG_MAIN
 #include <iostream>
 #include <string>
 
 #include "database.h"
 #include <command_parser.h>
+#include <boost/asio.hpp>
+#include <memory>
+
 
 int main() {
-    // std::cout << "Hello, World!" << std::endl;
 
     Database db;
-
-    // db.set("Hello", "World");
-    // std::cout << db.get("Hello") << std::endl;
-    //
-    // db.del("Hello");
-    // std::cout << db.get("Hello") << std::endl;
-
     std::string input;
 
     std::cout << "Welcome to MyRedisClone CLI. Type commands (SET, GET, DEL). Type EXIT to quit." << std::endl;
@@ -66,3 +62,5 @@ int main() {
 
     return 0;
 }
+
+#endif
