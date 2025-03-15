@@ -41,6 +41,12 @@ add_executable(redis_like
         src/main.cpp
         src/database.cpp
         src/command_parser.cpp
+        include/command_handler.h
+        src/command_handler.cpp
+        include/session.h
+        src/session.cpp
+        include/server.h
+        src/server.cpp
 )
 
 # Link against Boost
