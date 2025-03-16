@@ -58,6 +58,7 @@ add_executable(redis_tests
         tests/test_database.cpp
         src/database.cpp
         src/catch_amalgamated.cpp
+        tests/test_concurrency.cpp
 )
 
 # Tests include directories

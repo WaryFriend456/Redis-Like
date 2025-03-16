@@ -13,7 +13,7 @@ std::string handleCommand(const std::vector<std::string> &tokens, Database &db) 
 
     if (command == "SET" || command == "set") {
         if (tokens.size() < 3) {
-            return "Usage: GET <key> <value>";
+            return "Usage: Set <key> <value>";
         }
         db.set(tokens[1], tokens[2]);
         return "OK";

@@ -11,6 +11,7 @@ set(TEST_SOURCES
         test_database.cpp
         ../src/database.cpp
         ../src/catch_amalgamated.cpp
+        test_concurrency.cpp
 )
 
 # Create the test executable

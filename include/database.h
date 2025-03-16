@@ -7,6 +7,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <mutex>
 
 class Database {
 public:
@@ -21,6 +22,7 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> data;
+    std::mutex mutex;
 };
 
 #endif //DATABASE_H
