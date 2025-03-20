@@ -12,6 +12,7 @@ set(TEST_SOURCES
         ../src/database.cpp
         ../src/catch_amalgamated.cpp
         test_concurrency.cpp
+        test_list_key_operations.cppt
 )
 
 # Create the test executable

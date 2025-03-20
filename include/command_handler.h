@@ -11,4 +11,8 @@
 
 std::string handleCommand(const std::vector<std::string>& tokens, Database& db);
 
+std::string to_upper(const std::string& input);
+
+bool try_parse_int(const std::string& str, int& value);
+
 #endif //COMMAND_HANDLER_H
