@@ -1,27 +1,46 @@
-# Simple Key-Value Database
+# Redis-like In-Memory Database
 
-A lightweight in-memory key-value database implementation written in C++. This project provides a simple way to store, retrieve, and delete string key-value pairs.
+A high-performance, multi-threaded in-memory database implementation in C++ inspired by Redis. This project provides a network-accessible key-value store with support for multiple data types and advanced features.
 
 ## Features
 
-- In-memory key-value storage
-- Basic operations: SET, GET, DELETE
-- Command string parsing utility
-- Comprehensive test suite using Catch2
+- **Multiple Data Types**:
+  - Strings: Simple key-value storage
+  - Lists: Ordered collections supporting push/pop operations
+  - Hashes: Field-value pairs under a single key
+  - Sets: Unordered collections of unique strings
+  
+- **Network Accessibility**: 
+  - TCP server implementation using Boost.Asio
+  - Multi-threaded connection handling
+  
+- **Advanced Features**:
+  - Key expiration (TTL support)
+  - Type checking and validation
+  - Thread-safe operations with mutex protection
+
+## Architecture
+
+The project is built with a layered architecture:
+
+1. **Database Layer**: Core data storage and operations
+2. **Network Layer**: TCP server implementation for client connections
+3. **Session Management**: Handles individual client connections
 
 ## Installation
 
 ### Prerequisites
 
-- C++ compiler with C++17 support
+- C++17 compatible compiler
+- Boost libraries (for Asio networking)
 - CMake (minimum version 3.15)
 
 ### Build Instructions
 
 1. Clone the repository
 ```bash
-git clone https://github.com/YourUsername/key-value-database.git
-cd key-value-database
+git clone https://github.com/YourUsername/redis_like.git
+cd redis_like
 ```
 
 2. Create and navigate to build directory
@@ -37,7 +56,15 @@ make
 
 ## Usage
 
-### Basic API
+### Running the Server
+
+```bash
+./redis_like
+```
+
+The server will start on port 6379 (default Redis port) with multithreading enabled.
+
+### Database API
 
 ```cpp
 #include "database.h"
@@ -45,45 +72,31 @@ make
 // Create database instance
 Database db;
 
-// Store key-value pairs
+// String operations
 db.set("name", "John");
-db.set("age", "30");
+std::string name = db.get("name");
 
-// Retrieve values
-std::string name = db.get("name");  // Returns "John"
-std::string missing = db.get("unknown");  // Returns "NULL"
+// List operations
+db.rpush("mylist", {"item1", "item2", "item3"});
+db.lpush("mylist", {"item0"});
+std::string item = db.lpop("mylist");
+std::vector<std::string> items = db.lrange("mylist", 0, -1);
 
-// Delete entries
-bool deleted = db.del("age");  // Returns true
-bool notFound = db.del("unknown");  // Returns false
-```
+// Hash operations
+db.hset("user:1000", "name", "John");
+db.hset("user:1000", "email", "john@example.com");
+std::string email = db.hget("user:1000", "email");
+auto userFields = db.hgetall("user:1000");
 
-### Command Parsing
+// Set operations
+db.sadd("myset", {"value1", "value2"});
+bool isMember = db.sismember("myset", "value1");
+auto setMembers = db.smembers("myset");
 
-The project includes a command parser to help process string inputs:
-
-```cpp
-#include "command_parser.h"
-
-std::string input = "SET key1 value1";
-std::vector<std::string> tokens = parseCommand(input);
-// tokens = {"SET", "key1", "value1"}
-```
-
-## Testing
-
-The project uses the Catch2 testing framework. Tests are located in the `tests` directory.
-
-### Running Tests
-
-From the build directory:
-```bash
-make test
-```
-
-Or run the test executable directly:
-```bash
-./tests/tests
+// Key operations
+bool exists = db.exists("name");
+db.expire("name", 60); // expire in 60 seconds
+long long remaining = db.ttl("name");
 ```
 
 ## Project Structure
@@ -91,18 +104,46 @@ Or run the test executable directly:
 ```
 .
 ├── include/
-│   ├── database.h          # Database class definition
-│   └── command_parser.h    # Command parsing utilities
+│   ├── database.h          # Core database functionality
+│   ├── server.h            # TCP server implementation
+│   └── session.h           # Client session handling
 ├── src/
 │   ├── database.cpp        # Database implementation
-│   ├── command_parser.cpp  # Command parser implementation 
-│   └── catch_amalgamated.cpp # Test framework source
-├── tests/
-│   ├── test.cpp            # Test setup
-│   └── test_database.cpp   # Database tests
+│   ├── server.cpp          # Server implementation
+│   ├── session.cpp         # Session implementation
+│   └── main.cpp            # Entry point
+├── tests/                  # Test files
 ├── CMakeLists.txt          # Build configuration
 └── docs/
     └── Readme.md           # This file
+```
+
+## Implementation Details
+
+### Threading Model
+
+The server utilizes a thread pool with size equal to the number of hardware threads available on the system, ensuring optimal performance through parallel processing of client requests.
+
+### Memory Management
+
+All data is stored in-memory using STL containers:
+- `std::unordered_map` for the main data store
+- `std::vector` for lists
+- `std::set` for sets
+- `std::unordered_map` for hashes
+
+### Network Protocol
+
+The server uses a TCP-based protocol for communication. Client requests are processed asynchronously using Boost.Asio.
+
+## Testing
+
+The project uses the Catch2 testing framework for unit testing all database operations.
+
+### Running Tests
+
+```bash
+./tests/redis_like_tests
 ```
 
 ## License

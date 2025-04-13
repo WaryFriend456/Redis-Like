@@ -31,6 +31,11 @@ project(redis_like)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Specify Boost installation location
+set(BOOST_ROOT "C:/boost")
+set(BOOST_INCLUDEDIR "C:/boost/include")
+set(BOOST_LIBRARYDIR "C:/boost/lib")
+
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS system)
 include_directories(${Boost_INCLUDE_DIRS})
